@@ -1,23 +1,25 @@
 const express = require("express");
-var morgan = require('morgan')
+var morgan = require("morgan");
 const app = express();
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
 const morganConfig = (tokens, req, res) => {
-	const postData = (req.method==="POST") ? JSON.stringify(req.body) : ''
+	const postData = req.method === "POST" ? JSON.stringify(req.body) : "";
 	return [
-	  tokens.method(req, res),
-	  tokens.url(req, res),
-	  tokens.status(req, res),
-	  tokens.res(req, res, 'content-length'), '-',
-	  tokens['response-time'](req, res), 'ms',
-	  postData
-	].join(' ')
-}
+		tokens.method(req, res),
+		tokens.url(req, res),
+		tokens.status(req, res),
+		tokens.res(req, res, "content-length"),
+		"-",
+		tokens["response-time"](req, res),
+		"ms",
+		postData,
+	].join(" ");
+};
 
-app.use(express.static('dist'))
-app.use(express.json())
-app.use(morgan(morganConfig))
+app.use(express.static("dist"));
+app.use(express.json());
+app.use(morgan(morganConfig));
 
 let persons = [
 	{
@@ -68,7 +70,7 @@ app.post("/api/persons", (request, response) => {
 		return response.status(400).json({
 			error: "name or number missing",
 		});
-	} else if (persons.map(person => person.name).includes(body.name)) {
+	} else if (persons.map((person) => person.name).includes(body.name)) {
 		return response.status(400).json({
 			error: "name must be unique",
 		});
