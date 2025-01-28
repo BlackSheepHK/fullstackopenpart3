@@ -1,6 +1,8 @@
 const express = require("express");
 var morgan = require('morgan')
 const app = express();
+const PORT = process.env.PORT || 3001
+
 const morganConfig = (tokens, req, res) => {
 	const postData = (req.method==="POST") ? JSON.stringify(req.body) : ''
 	return [
@@ -13,6 +15,7 @@ const morganConfig = (tokens, req, res) => {
 	].join(' ')
 }
 
+app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan(morganConfig))
 
@@ -88,7 +91,6 @@ app.delete("/api/persons/:id", (request, response) => {
 	response.status(204).end();
 });
 
-const PORT = 3001;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
